@@ -38,12 +38,10 @@ textContents.line3.pt = '“Todas as crianças têm o direito de ser protegidas 
 function textChanger(newString, spanId) {
   
   const span = document.querySelector(spanId)
-  const oldString = span.innerHTML
-
-  const newStringArray = []
+  const oldString = span.innerText
+   const newStringArray = []
   const oldStringArray = []
-  let changedString
-    
+      
   //create arrays from strings
 
   for (let i = 0; i < newString.length; i++) {
@@ -53,37 +51,55 @@ function textChanger(newString, spanId) {
     oldStringArray.push(oldString[i])
   }
 
+  newStringArrayLength = newStringArray.length
+  oldStringArrayLength = oldStringArray.length
+
   //equalize string arrays
-  if (newString.length < oldString.length) {
-    for (let i = 0; i <= oldStringArray.length - newStringArray.length; i++) {
+  if (newStringArrayLength < oldStringArrayLength) {
+    for (let i = 0; i < oldStringArrayLength - newStringArrayLength; i++) {
       newStringArray.push(null)    
     }    
   }
-  else if (newStringArray.length > oldStringArray.length) {
-    for (let i = 0; i <= newStringArray.length - oldStringArray.length; i++) {
+  else if (newStringArrayLength > oldStringArrayLength) {
+    for (let i = 0; i < newStringArrayLength - oldStringArrayLength; i++) {
       oldStringArray.push(null)      
     }
   }
+  
+  console.log(newStringArray, oldStringArray)
+  
+  
+  // console.log(newStringArray.length)
+  // console.log(oldStringArray.length)
+
 
   //substitute each character at time
   changedStringArray = oldStringArray
-  
+
   let i = 0 
-  function myLoop() {         
+  function change() {         
     setTimeout(function() {   
       changedStringArray[i] = newStringArray[i]
       changedString = changedStringArray.join('')
       span.innerHTML = changedString
       i++
       if (i < changedStringArray.length) {
-        myLoop()
+        change()
       }
-    }, 10) //set interval
+    }, 5) //set interval
   }  
-  myLoop()
+  change()
 
 }
 
+setTimeout(() => {
+  textChanger(textContents.line2.fr, '#line1')
+}, 2000)
 
+setTimeout(() => {
+  textChanger(textContents.line2.pt, '#line1')
+}, 6000)
 
-textChanger('Bonjour, Monde!', '#line1')
+// setTimeout(() => {
+//   textChanger(textContents.line2.en, '#line1')
+// }, 10000)
