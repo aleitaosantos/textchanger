@@ -36,70 +36,70 @@ textContents.line3.pt = '“Todas as crianças têm o direito de ser protegidas 
     // }
     
 function textChanger(newString, spanId) {
-  
-  const span = document.querySelector(spanId)
-  const oldString = span.innerText
-   const newStringArray = []
-  const oldStringArray = []
-      
-  //create arrays from strings
-
-  for (let i = 0; i < newString.length; i++) {
-    newStringArray.push(newString[i])
-  }
-  for (let i = 0; i < oldString.length; i++) {
-    oldStringArray.push(oldString[i])
-  }
-
-  newStringArrayLength = newStringArray.length
-  oldStringArrayLength = oldStringArray.length
-
-  //equalize string arrays
-  if (newStringArrayLength < oldStringArrayLength) {
-    for (let i = 0; i < oldStringArrayLength - newStringArrayLength; i++) {
-      newStringArray.push(null)    
-    }    
-  }
-  else if (newStringArrayLength > oldStringArrayLength) {
-    for (let i = 0; i < newStringArrayLength - oldStringArrayLength; i++) {
-      oldStringArray.push(null)      
+  return new Promise((resolve, reject) => {
+    const span = document.querySelector(spanId)
+    const oldString = span.innerText
+    
+    //create arrays from strings
+    const newStringArray = []
+    const oldStringArray = []
+    for (let i = 0; i < newString.length; i++) {
+      newStringArray.push(newString[i])
     }
-  }
-  
-  console.log(newStringArray, oldStringArray)
-  
-  
-  // console.log(newStringArray.length)
-  // console.log(oldStringArray.length)
+    for (let i = 0; i < oldString.length; i++) {
+      oldStringArray.push(oldString[i])
+    }
+    newStringArrayLength = newStringArray.length
+    oldStringArrayLength = oldStringArray.length
 
-
-  //substitute each character at time
-  changedStringArray = oldStringArray
-
-  let i = 0 
-  function change() {         
-    setTimeout(function() {   
-      changedStringArray[i] = newStringArray[i]
-      changedString = changedStringArray.join('')
-      span.innerHTML = changedString
-      i++
-      if (i < changedStringArray.length) {
-        change()
+    //equalize string arrays
+    if (newStringArrayLength < oldStringArrayLength) {
+      for (let i = 0; i < oldStringArrayLength - newStringArrayLength; i++) {
+        newStringArray.push(null)    
+      }    
+    }
+    else if (newStringArrayLength > oldStringArrayLength) {
+      for (let i = 0; i < newStringArrayLength - oldStringArrayLength; i++) {
+        oldStringArray.push(null)      
       }
-    }, 5) //set interval
-  }  
-  change()
-
+    }
+    changedStringArray = oldStringArray
+    i = 0 
+    function change() {         
+      setTimeout(function() {   
+        changedStringArray[i] = newStringArray[i]
+        changedString = changedStringArray.join('')
+        span.innerText = changedString
+        i++
+        if (i < changedStringArray.length) {
+          change()        
+        } else {
+          span.innerText = newString
+          resolve()
+          console.log('resolved!')
+        }
+      }, 1) //set interval
+    }  
+    change()    
+  })
 }
 
+async function changeIdiom(idiom) {
+  await textChanger(textContents.line1[idiom], '#line1')
+  await textChanger(textContents.line2[idiom], '#line2')
+  await textChanger(textContents.line3[idiom], '#line3')
+  return 'done!'
+}
+
+// textChanger(textContents.line2.fr, '#line2')
 setTimeout(() => {
-  textChanger(textContents.line2.fr, '#line1')
-}, 2000)
+  changeIdiom('pt')  
+}, 2000);
 
 setTimeout(() => {
-  textChanger(textContents.line2.pt, '#line1')
-}, 6000)
+  changeIdiom('fr')  
+}, 6000);
 
-// setTimeout(() => {
-//   textChanger(textContents.line2.en, '#line1')
-// }, 10000)
+setTimeout(() => {
+  changeIdiom('en')  
+}, 10000);
